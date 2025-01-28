@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import type { Category } from './CategoryList';
+import { useExpenses } from '@/hooks/useExpenses';
 
 const ExpenseForm = () => {
   const { toast } = useToast();
+  const { addExpense } = useExpenses();
   const [description, setDescription] = React.useState('');
   const [amount, setAmount] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState('');
@@ -19,7 +21,7 @@ const ExpenseForm = () => {
     { id: '4', name: 'Moradia', color: '#FFA99F' },
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!description || !amount || !selectedCategory) {
       toast({
@@ -29,6 +31,14 @@ const ExpenseForm = () => {
       });
       return;
     }
+
+    const category = categories.find(c => c.id === selectedCategory)?.name || '';
+    
+    await addExpense.mutateAsync({
+      description,
+      amount: Number(amount),
+      category,
+    });
     
     toast({
       title: "Sucesso",
