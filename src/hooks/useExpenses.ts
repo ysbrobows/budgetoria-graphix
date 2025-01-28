@@ -44,8 +44,36 @@ export const useExpenses = () => {
     },
   });
 
+  const editExpense = useMutation({
+    mutationFn: async (updatedExpense: Expense) => {
+      const currentExpenses = getStoredExpenses();
+      const updatedExpenses = currentExpenses.map((expense) =>
+        expense.id === updatedExpense.id ? updatedExpense : expense
+      );
+      setStoredExpenses(updatedExpenses);
+      return Promise.resolve(updatedExpense);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["expenses"] });
+    },
+  });
+
+  const deleteExpense = useMutation({
+    mutationFn: async (expenseId: string) => {
+      const currentExpenses = getStoredExpenses();
+      const updatedExpenses = currentExpenses.filter((expense) => expense.id !== expenseId);
+      setStoredExpenses(updatedExpenses);
+      return Promise.resolve(expenseId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["expenses"] });
+    },
+  });
+
   return {
     expenses,
     addExpense,
+    editExpense,
+    deleteExpense,
   };
 };
