@@ -28,7 +28,7 @@ export const useExpenses = () => {
   });
 
   const addExpense = useMutation({
-    mutationFn: (newExpense: Omit<Expense, "id" | "date">) => {
+    mutationFn: async (newExpense: Omit<Expense, "id" | "date">) => {
       const expense: Expense = {
         ...newExpense,
         id: crypto.randomUUID(),
@@ -37,7 +37,7 @@ export const useExpenses = () => {
       
       const updatedExpenses = [expense, ...getStoredExpenses()];
       setStoredExpenses(updatedExpenses);
-      return expense;
+      return Promise.resolve(expense);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
