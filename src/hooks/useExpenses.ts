@@ -28,11 +28,10 @@ export const useExpenses = () => {
   });
 
   const addExpense = useMutation({
-    mutationFn: async (newExpense: Omit<Expense, "id" | "date">) => {
+    mutationFn: async (newExpense: Omit<Expense, "id">) => {
       const expense: Expense = {
         ...newExpense,
         id: crypto.randomUUID(),
-        date: new Date().toISOString(),
       };
       
       const updatedExpenses = [expense, ...getStoredExpenses()];
