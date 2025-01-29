@@ -13,6 +13,7 @@ const ExpenseForm = () => {
   const [description, setDescription] = React.useState('');
   const [amount, setAmount] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState('');
+  const [date, setDate] = React.useState(new Date().toISOString().split('T')[0]);
 
   const categories: Category[] = [
     { id: '1', name: 'Alimentação', color: '#FF719A' },
@@ -23,7 +24,7 @@ const ExpenseForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!description || !amount || !selectedCategory) {
+    if (!description || !amount || !selectedCategory || !date) {
       toast({
         title: "Erro",
         description: "Por favor, preencha todos os campos",
@@ -38,6 +39,7 @@ const ExpenseForm = () => {
       description,
       amount: Number(amount),
       category,
+      date,
     });
     
     toast({
@@ -48,6 +50,7 @@ const ExpenseForm = () => {
     setDescription('');
     setAmount('');
     setSelectedCategory('');
+    setDate(new Date().toISOString().split('T')[0]);
   };
 
   return (
@@ -72,14 +75,23 @@ const ExpenseForm = () => {
             placeholder="R$ 0,00"
           />
         </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Data</label>
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </div>
         
         <div className="space-y-2">
           <label className="text-sm font-medium">Categoria</label>
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Selecione uma categoria" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white">
               {categories.map((category) => (
                 <SelectItem key={category.id} value={category.id}>
                   {category.name}

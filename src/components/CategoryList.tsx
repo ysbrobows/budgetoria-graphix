@@ -102,11 +102,11 @@ const CategoryList = () => {
                 setColor('#000000');
               }}
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 mr-2" />
               Nova Categoria
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="bg-white">
             <DialogHeader>
               <DialogTitle>
                 {editingCategory ? 'Editar Categoria' : 'Nova Categoria'}
@@ -151,10 +151,11 @@ const CategoryList = () => {
                 />
                 <span className="font-medium">{category.name}</span>
               </div>
-              <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-md p-1">
                 <Button
                   variant="ghost"
                   size="icon"
+                  className="h-8 w-8"
                   onClick={() => handleEdit(category)}
                 >
                   <Pencil className="w-4 h-4" />
@@ -162,6 +163,7 @@ const CategoryList = () => {
                 <Button
                   variant="ghost"
                   size="icon"
+                  className="h-8 w-8"
                   onClick={() => handleDelete(category.id)}
                 >
                   <Trash2 className="w-4 h-4" />

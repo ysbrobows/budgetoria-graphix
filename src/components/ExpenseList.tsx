@@ -18,12 +18,14 @@ const ExpenseList = () => {
   const [description, setDescription] = React.useState('');
   const [amount, setAmount] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState('');
+  const [date, setDate] = React.useState('');
 
   const handleEdit = (expense: any) => {
     setEditingExpense(expense);
     setDescription(expense.description);
     setAmount(expense.amount.toString());
     setSelectedCategory(expense.category);
+    setDate(new Date(expense.date).toISOString().split('T')[0]);
     setIsDialogOpen(true);
   };
 
@@ -45,7 +47,7 @@ const ExpenseList = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!description || !amount || !selectedCategory) {
+    if (!description || !amount || !selectedCategory || !date) {
       toast({
         title: "Erro",
         description: "Por favor, preencha todos os campos",
@@ -60,6 +62,7 @@ const ExpenseList = () => {
         description,
         amount: Number(amount),
         category: selectedCategory,
+        date,
       });
       
       toast({
@@ -71,6 +74,7 @@ const ExpenseList = () => {
       setDescription('');
       setAmount('');
       setSelectedCategory('');
+      setDate('');
       setEditingExpense(null);
     } catch (error) {
       toast({
@@ -125,7 +129,7 @@ const ExpenseList = () => {
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
+        <DialogContent className="bg-white">
           <DialogHeader>
             <DialogTitle>Editar Despesa</DialogTitle>
           </DialogHeader>
@@ -148,6 +152,15 @@ const ExpenseList = () => {
                 placeholder="R$ 0,00"
               />
             </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Data</label>
+              <Input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+            </div>
             
             <div className="space-y-2">
               <label className="text-sm font-medium">Categoria</label>
@@ -155,7 +168,7 @@ const ExpenseList = () => {
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione uma categoria" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   {categories.map((category) => (
                     <SelectItem key={category.id} value={category.name}>
                       {category.name}
